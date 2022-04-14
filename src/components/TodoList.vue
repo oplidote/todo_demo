@@ -5,42 +5,55 @@
         <div 
             class="card-body p-2 d-flex"
             @click="moveToPage(todo.id)"
+            style="cursor:pointer"
         >
 
-            <div class="form-check flex-grow-1">
+            <div class="flex-grow-1">
                 <input 
                     type="checkbox" 
-                    class="form-check-input" 
+                    class="ml-2 mr-2" 
                     :checked="todo.complete" 
                     :id="todo.id" 
                     @change="toggleTodo(index, $event)"
                     @click.stop
+                    
                 >
-                <label 
+                <span 
                     class="form-check-label" 
                     :class="{ todocss : todo.complete }" 
-                    :for="todo.id">
+                    >
                     {{ todo.subject }}
-                </label>
+                </span>
             </div>
             <!-- 삭제버튼 -->
             <div>
                 <button 
                     class="btn btn-danger btn-sm" 
-                    @click.stop="deleteTodo(index)"
+                    @click.stop="openModal(todo.id)"
                 >
                     Delete
                 </button>
             </div>
-
         </div>
-
     </div>
+    <teleport to ="#modal">
+        <!-- 경고창 -->
+        <Modal-Win 
+            v-if="showModal"
+            @close="closeModal"
+            @delete="deleteTodo"
+        />
+    </teleport>
 </template>
 <script>
     import { useRouter} from 'vue-router' 
+    import ModalWin from '@/components/ModalWin.vue';
+    import {ref} from 'vue';
 
     export default {
+        components: {
+            ModalWin
+        },
         // props: ['todos']
         props: {
             todos: {
@@ -53,14 +66,29 @@
 
         setup(props, {emit}){
 
-            const router = useRouter();
+            // 실제 삭제될 id 보관
+            const todoDeleteId = ref(null);
 
+            const router = useRouter();
+            // 모달 상태
+            const showModal = ref(false);
+            const openModal = (index) => {
+                showModal.value = true;
+                todoDeleteId.value = index;
+            }
+            const closeModal = () => {
+                showModal.value =false;
+                todoDeleteId.value = null;
+            }
+            
             const toggleTodo = (index, event) => {
                 // console.log(index);
                 emit('toggle-todo', index, event.target.checked);
             };
-            const deleteTodo = (index) => {
-                emit('delete-todo', index);
+            const deleteTodo = () => {
+                emit('delete-todo', todoDeleteId.value);
+                showModal.value= false;
+                todoDeleteId.value= null;
             };
 
             // 클릭된 id 를 전달한다.
@@ -79,7 +107,10 @@
             return {
                 toggleTodo,
                 deleteTodo,
-                moveToPage
+                moveToPage,
+                showModal,
+                openModal,
+                closeModal,
             }
         }
     }
