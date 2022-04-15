@@ -7,7 +7,7 @@
       <button class="btn btn-primary btn-sm"
         @click="moveToCreate"
       >할일 등록</button>
-    </div>  
+    </div>
     <!-- 할일 검색 입력창 -->
     <input class="form-control" v-model="searchText" type="text" placeholder="Search Todo list"
       @keyup.enter="searchTodo">

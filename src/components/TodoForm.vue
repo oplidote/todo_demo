@@ -4,13 +4,11 @@
         <div class="row">            
             <!-- 제목 수정 및 입력 창 -->
             <div class="col-6">
-                <div class="form-group">
-                    <label>제목</label>
-                    <input type="text" class="form-control" v-model="todo.subject">
-
-                    <div v-if="subjectError" class="red bold-text">{{ subjectError }}</div>
-
-                </div>
+                <InputView
+                    label="제목"
+                    :err = "subjectError"
+                    v-model:subject="todo.subject"
+                />
             </div>
 
             <!-- 상태 수정 창 -->
@@ -64,11 +62,13 @@ import {computed, ref} from 'vue';
 import _ from 'lodash';
 import ToastBox from '@/components/ToastBox.vue';
 import { useToast } from '@/composables/toast.js';
+import InputView from '@/components/InputView.vue';
 
 export default {
 
     components: {
-        ToastBox
+        ToastBox,
+        InputView
     },
     props: {
         editing: {
@@ -78,7 +78,7 @@ export default {
     },
     emits: ['update-todo','new-todo'],
     setup(props, {emit}) {
-
+        
         const route = useRoute();
         const router = useRouter();
         // 현재 진행 및 수정 중인 todo 정보를 저장하고 있는 객체
@@ -103,8 +103,11 @@ export default {
             toastMessage,
             triggerToast,
             toastAlertType
-        } = useToast();    
+        } = useToast();
 
+        // const updateTodoSubject = (txt) => {
+        //     todo.value.subject = txt;
+        // }
         const getTodo = async () => {
             // 내용을 가지고 올때 로딩 보여주고
             loading.value = true;
@@ -210,20 +213,14 @@ export default {
             triggerToast,
             toastAlertType,
 
-            subjectError
+            subjectError,
+            // updateTodoSubject,
         }
 
     }
 }
 </script>
-
 <style scoped>
-    .bold-text {
-        font-weight: 900;
-    }
-    .fade {
-        
-    }
     .fade-enter-active,
     .fade-leave-active {
         transition: .5s ease;

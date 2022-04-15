@@ -3,29 +3,23 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">주의 !</h5>
-            <button
-              type="button"
-              class="close"
-            >
+            <h5 class="modal-title">
+              <!-- 타이틀 slot -->
+              <slot name="title"></slot>
+            </h5>
+            <button type="button" class="close">
               <span @click="onClose ">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            정말 내용을 삭제하실건가요?
+            <!-- Modal 내용 슬롯 -->
+            <slot name="body"></slot>
           </div>
           <div class="modal-footer">
-            <button type="button" 
-                class="btn btn-secondary"
-                @click="onClose"
+            <!-- 하단 버튼 slot -->
+            <slot name="footer"></slot>
 
-            >
-              Close
-            </button>
-            <button type="button"
-                class="btn btn-danger"
-                @click="onDelete"
-            >Delete</button>
+            
           </div>
         </div>
       </div>
@@ -34,18 +28,14 @@
 
 <script>
     export default {
-      emits: ['close','delete'],
+      emits: ['close-win'],
 
         setup(props, {emit}){
             const onClose = () => {
-                emit('close');
-            };
-            const onDelete = () => {
-                emit('delete');
+                emit('close-win');
             };
             return{
                 onClose,
-                onDelete,
             }
 
         }
