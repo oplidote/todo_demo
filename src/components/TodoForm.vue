@@ -57,12 +57,16 @@
 
 <script>
 import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '@/axios.js';
+
 import {computed, ref} from 'vue';
 import _ from 'lodash';
 import ToastBox from '@/components/ToastBox.vue';
 import { useToast } from '@/composables/toast.js';
 import InputView from '@/components/InputView.vue';
+import { getCurrentInstance } from 'vue';
+
 
 export default {
 
@@ -77,8 +81,8 @@ export default {
         }
     },
     emits: ['update-todo','new-todo'],
-    setup(props, {emit}) {
-        
+    setup(props) {
+        const { emit } = getCurrentInstance();
         const route = useRoute();
         const router = useRouter();
         // 현재 진행 및 수정 중인 todo 정보를 저장하고 있는 객체
@@ -112,7 +116,7 @@ export default {
             // 내용을 가지고 올때 로딩 보여주고
             loading.value = true;
             try {
-                const res = await axios.get(`http://localhost:3000/todos/${todoId}`);
+                const res = await axios.get(`todos/${todoId}`);
                 todo.value = { ...res.data}; // spread 연산으로 내용물만 복사
                 originalTodo.value = { ...res.data};
                 // 결과가 오게 되면
@@ -169,14 +173,14 @@ export default {
                 }
                 if(props.editing){
                     // 기존 내용 편집 시
-                    res = await axios.put(`http://localhost:3000/todos/${todoId}`,data);
+                    res = await axios.put(`todos/${todoId}`,data);
                     // 원본이 갱신 되었으므로 이를 반영하여 새로 저장해 줌.
                     originalTodo.value = { ...res.data };
                     triggerToast('업데이트 성공 !', 'success');
                     emit('update-todo',{});
                 } else {
                     // 신규 생성 시
-                    res = await axios.post(`http://localhost:3000/todos`,data);
+                    res = await axios.post(`todos`,data);
                     triggerToast('수정 성공 !', 'success');
                     emit('new-todo',{});
                 }

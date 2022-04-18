@@ -5,9 +5,7 @@
       <router-link class="nav-link" :to="{ name: 'Home' }">Home</router-link>
       <router-link class="nav-link" :to="{ name: 'Todos' }">Todos</router-link>
       <router-link class="nav-link" :to="{ name: 'About' }">About</router-link>
-      <router-link class="nav-link" :to="{ name: 'Profile' }"
-        >Profile</router-link
-      >
+      <router-link class="nav-link" :to="{ name: 'Profile' }">Profile</router-link>
 
       
     </div>
