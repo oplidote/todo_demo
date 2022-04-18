@@ -1,25 +1,18 @@
 <template>    
     <h1>할일 내용 수정</h1>
-    <TodoForm :editing="true" @update-todo="updateTodo"/>
+    <TodoForm :editing="true"/>
 </template>
 
 <script>
 import TodoForm from '@/components/TodoForm.vue'
-import { getCurrentInstance } from 'vue';
+// import { getCurrentInstance } from 'vue';
 
 export default {
     components: {
         TodoForm
     },
-    emits : ['update-todo-toast'],
     setup() {
-        const { emit } = getCurrentInstance();
-        const updateTodo = () => {
-            console.log("내용수정");
-            emit('update-todo-toast',{});
-        }
         return {
-            updateTodo,
         }
     }
 }

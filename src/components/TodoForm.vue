@@ -65,7 +65,6 @@ import _ from 'lodash';
 import ToastBox from '@/components/ToastBox.vue';
 import { useToast } from '@/composables/toast.js';
 import InputView from '@/components/InputView.vue';
-import { getCurrentInstance } from 'vue';
 
 
 export default {
@@ -80,9 +79,7 @@ export default {
             default: false
         }
     },
-    emits: ['update-todo','new-todo'],
     setup(props) {
-        const { emit } = getCurrentInstance();
         const route = useRoute();
         const router = useRouter();
         // 현재 진행 및 수정 중인 todo 정보를 저장하고 있는 객체
@@ -176,21 +173,25 @@ export default {
                     res = await axios.put(`todos/${todoId}`,data);
                     // 원본이 갱신 되었으므로 이를 반영하여 새로 저장해 줌.
                     originalTodo.value = { ...res.data };
+
+                    // emit('update-todo',{});
+                    
                     triggerToast('업데이트 성공 !', 'success');
-                    emit('update-todo',{});
                 } else {
                     // 신규 생성 시
                     res = await axios.post(`todos`,data);
                     triggerToast('수정 성공 !', 'success');
-                    emit('new-todo',{});
+                    // emit('new-todo',{});
                 }
                 //  제목, 내용을 비운다.
                     todo.value.subject = '';
                     todo.value.body = '';
-                    // 목록으로 돌아간다.
-                    router.push({
-                        name: 'Todos'
-                    });
+                    // 신규등록인 경우에만 목록으로 돌아간다.
+                    if(!props.editing){
+                        router.push({
+                            name: 'Todos'
+                        });
+                    }
             } catch(error) {
 
                 console.log(error);

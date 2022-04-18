@@ -13,10 +13,7 @@
 
   <!-- 라우터 화면 보여주기 -->
   <div class="container">
-    <router-view 
-      @update-todo-toast="updateTodo"
-      @new-todo-toast="newTodo"
-    />
+    <router-view />
     <!-- 안내창 -->
       <Toast-box v-if="showToast" :message="toastMessage" :type="toastAlertType"/>
   </div>
@@ -32,14 +29,7 @@
       ToastBox
     },
     setup() {
-      const updateTodo = () => {
-        console.log('업데이트');
-        triggerToast("목록이 업데이트 되었습니다.",'success');
-      };
-      const newTodo = () => {
-        console.log('새글등록');
-        triggerToast("새로운 글이 추가되었습니다.",'success');
-      };
+      
       // ToastBox 관련 
       const {
         showToast,
@@ -48,9 +38,6 @@
         toastAlertType
       } = useToast();
       return {
-        updateTodo,
-        newTodo,
-
         showToast,
         toastMessage,
         triggerToast,
